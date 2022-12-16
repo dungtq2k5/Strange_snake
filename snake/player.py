@@ -111,12 +111,12 @@ class PLAYER(pygame.sprite.Sprite):
 
 
         if self.element_kind == 'big_slow':
-            if self.size != 30+40 and self.speed != 4-1: self.player_update(+10, -1)
+            self.player_update(+10, -1)
 
             self.obs_eat_disability = True
         
         if self.element_kind == 'small_fast':
-            if self.size != 30-10 and self.speed != 4+2: self.player_update(-10, +2)
+            self.player_update(-10, +2)
 
         self.player_boosting = True
 
