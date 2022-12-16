@@ -4,7 +4,6 @@ from sounds import  element_unavailable_sound, element1_sound, element2_sound
 from path import path
 
 
-
 class PLAYER(pygame.sprite.Sprite):
     def __init__(self, position, player):
         super().__init__()
@@ -12,8 +11,6 @@ class PLAYER(pygame.sprite.Sprite):
         self.player = player
 
         self.size = 30
-        self.size_update = 0
-        self.speed_update = 0
         self.speed = 4
         self.x_move = 0
         self.y_move = 0
@@ -29,7 +26,7 @@ class PLAYER(pygame.sprite.Sprite):
         self.pixel_font = pygame.font.Font(path + "\Pixeled.ttf", 15)
 
 # update player after eat element
-    def player_information(self):
+    def player_reset_info(self):
         self.image = pygame.Surface((self.size,self.size))
         self.image.fill('white')
         self.rect = self.image.get_rect(center=(self.rect.centerx,self.rect.centery))
@@ -47,21 +44,16 @@ class PLAYER(pygame.sprite.Sprite):
                 self.y_move = -self.speed
 
     def player_update(self, size_update, speed_update):
-    
-        self.size_update = size_update # keep info  
-        self.speed_update = speed_update
-
-        self.size += self.size_update   # update player
-        self.speed += self.speed_update
-
-        self.player_information()
+        self.size += size_update   # update player
+        self.speed += speed_update
        
-# reset player back 
+        self.player_reset_info()
+       
+# reset player back to original
     def player_reset(self):
-        self.size -= self.size_update
-        self.speed -= self.speed_update
-        
-        self.player_information()
+        self.size = 30
+        self.speed = 4
+        self.player_reset_info()
        
     def player_controller(self, player):
         keys = pygame.key.get_pressed()
@@ -112,22 +104,21 @@ class PLAYER(pygame.sprite.Sprite):
 
 # collide with elements
     def player_boost(self, element_kind):
+        self.player_reset()
+
         self.element_kind = element_kind
+        self.time_element_available = 5 * 60
+
 
         if self.element_kind == 'big_slow':
-            self.time_element_available = 5 * 60
+            if self.size != 30+40 and self.speed != 4-1: self.player_update(+10, -1)
 
-            if self.player_boosting == False:
-                self.player_update(+10, -1)
             self.obs_eat_disability = True
-            self.player_boosting = True
         
         if self.element_kind == 'small_fast':
-            self.time_element_available = 5 * 60
+            if self.size != 30-10 and self.speed != 4+2: self.player_update(-10, +2)
 
-            if self.player_boosting == False:
-                self.player_update(-10, +2)
-            self.player_boosting = True
+        self.player_boosting = True
 
     def player_boost_remain(self):
         if self.player_boosting == True:
@@ -173,11 +164,3 @@ class PLAYER(pygame.sprite.Sprite):
 
         self.player_limitation()
         self.player_boost_remain() 
-    
-
-
-        
-       
-
-        
-            
