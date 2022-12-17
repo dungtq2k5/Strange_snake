@@ -51,6 +51,7 @@ class PLAYER(pygame.sprite.Sprite):
        
 # reset player back to original
     def player_reset(self):
+        self.obs_eat_disability = False
         self.size = 30
         self.speed = 4
         self.player_reset_info()
